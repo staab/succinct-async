@@ -14,7 +14,7 @@ class Thing {
   }
 }
 
-instrumentClass(Thing)
+instrumentObject(Thing.prototype)
 
 const doStuff = instrument('doStuff', async () => {
   const thing = new Thing()
