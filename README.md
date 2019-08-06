@@ -2,7 +2,7 @@ This is a tiny library for adding custom trace data to error objects for easier 
 
 Example:
 
-```
+```js
 class Thing {
   something() {
     throw new Error("Oops")
