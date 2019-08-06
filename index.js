@@ -2,6 +2,7 @@ const IS_INSTRUMENTED = Symbol('isInstrumented')
 
 const config = {
   Promise,
+  getMethodName: (obj, k) => `${obj.constructor.name}.${k}`,
   modifyStack: (name, error) => {
     // If they threw something other than an error,
     // don't mess it up for them
@@ -20,15 +21,6 @@ const config = {
     return error
   },
 }
-
-/**
- * Configure instrumentation module
- * @param {Object} newConfig - config data
- *   - Promise - the promise class your application code uses.
- *     Defaults to host Promise.
- *   - modifyStack - function called when handling an error.
- */
-const configure = newConfig => Object.assign(config, newConfig)
 
 /**
  * Wrap a function with error handling.
@@ -71,7 +63,9 @@ const instrument = (name, f) => {
  * Instrument all methods of a class.
  * @param {Object} cls - The class to be instrumented
  */
-const instrumentClass = cls => {
+const instrumentClass = (cls, opts = {}) => {
+  const getName = opts.getName || config.getMethodName
+
   let obj = cls.prototype
   do {
     if (obj.constructor === Object) {
@@ -80,10 +74,10 @@ const instrumentClass = cls => {
 
     Object.getOwnPropertyNames(obj).forEach(k => {
       if (typeof obj[k] === 'function' && k !== 'constructor') {
-        obj[k] = instrument(`${obj.constructor.name}.${k}`, obj[k])
+        obj[k] = instrument(getName(k), obj[k])
       }
     })
   } while (obj = Object.getPrototypeOf(obj))
 }
 
-module.exports = {IS_INSTRUMENTED, instrument, instrumentClass, configure}
+module.exports = {IS_INSTRUMENTED, instrument, instrumentClass, succinctAsyncConfig: config}
