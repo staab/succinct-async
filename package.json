@@ -2,6 +2,7 @@
   "name": "succinct-async",
   "version": "1.0.4",
   "description": "A tiny library to help you locate errors in heavily asynchronous javascript code, with no noise.",
+  "repository": "https://github.com/staab/succinct-async",
   "main": "index.js",
   "author": "Jon Staab",
   "license": "MIT"
