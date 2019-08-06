@@ -41,12 +41,12 @@ const instrument = (name, f) => {
     try {
       result = f.call(this, ...args)
     } catch (error) {
-      throw modifyStack(name, error)
+      throw config.modifyStack(name, error)
     }
 
-    if (result instanceof Promise) {
+    if (result instanceof config.Promise) {
       result = result.catch(error => {
-        throw modifyStack(name, error)
+        throw config.modifyStack(name, error)
       })
     }
 
