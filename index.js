@@ -74,7 +74,7 @@ const instrumentClass = (cls, opts = {}) => {
 
     Object.getOwnPropertyNames(obj).forEach(k => {
       if (typeof obj[k] === 'function' && k !== 'constructor') {
-        obj[k] = instrument(getName(k), obj[k])
+        obj[k] = instrument(getName(obj, k), obj[k])
       }
     })
   } while (obj = Object.getPrototypeOf(obj))
