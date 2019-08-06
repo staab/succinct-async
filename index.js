@@ -60,13 +60,19 @@ const instrument = (name, f) => {
 }
 
 /**
- * Instrument all methods of a class.
- * @param {Object} cls - The class to be instrumented
+ * Instrument all methods of an object. To instrument a class,
+ *   pass the class prototype.
+ * @param {Object} instance - The object to be instrumented
+ * @params {Object} opts - options for how to instrument the object
+ *   - getName determines how to build the trace string
+ *   - copyMethodsToInstance copies parent methods to the instance.
+ *     Not recommended unless only a few instances are ever created.
  */
-const instrumentClass = (cls, opts = {}) => {
+const instrumentObject = (instance, opts = {}) => {
   const getName = opts.getName || config.getMethodName
+  const copyMethodsToInstance = opts.copyMethodsToInstance || false
 
-  let obj = cls.prototype
+  let obj = instance
   do {
     if (obj.constructor === Object) {
       break
@@ -74,10 +80,17 @@ const instrumentClass = (cls, opts = {}) => {
 
     Object.getOwnPropertyNames(obj).forEach(k => {
       if (typeof obj[k] === 'function' && k !== 'constructor') {
-        obj[k] = instrument(getName(obj, k), obj[k])
+        if (copyMethodsToInstance) {
+          instance[k] = instrument(getName(instance, k), instance[k] || obj[k])
+        } else {
+          obj[k] = instrument(getName(obj, k), obj[k])
+        }
       }
     })
   } while (obj = Object.getPrototypeOf(obj))
+
+  // Make this chainable
+  return instance
 }
 
-module.exports = {IS_INSTRUMENTED, instrument, instrumentClass, succinctAsyncConfig: config}
+module.exports = {IS_INSTRUMENTED, instrument, instrumentObject, succinctAsyncConfig: config}
