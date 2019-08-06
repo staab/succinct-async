@@ -1,0 +1,8 @@
+{
+  "name": "succinct-async",
+  "version": "1.0.0",
+  "description": "A tiny library to help you locate errors in heavily asynchronous javascript code, with no noise.",
+  "main": "index.js",
+  "author": "Jon Staab",
+  "license": "MIT"
+}
