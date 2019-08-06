@@ -1,5 +1,7 @@
 This is a tiny library for adding custom trace data to error objects for easier debugging. Read the [blog post]().
 
+[![npm version](https://badge.fury.io/js/succinct-async.svg)](https://badge.fury.io/js/succinct-async)
+
 Example:
 
 ```js
